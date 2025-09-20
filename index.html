@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Retail Product Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Retail Product Management</h1>
+
+    <h2>All Products</h2>
+    <table id="productsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price ($)</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Add Product</h2>
+    <form id="addProductForm">
+        <input type="text" id="addName" placeholder="Name" required>
+        <input type="text" id="addDescription" placeholder="Description" required>
+        <input type="number" id="addPrice" placeholder="Price" required>
+        <input type="number" id="addQuantity" placeholder="Quantity" required>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <h2>Update Product</h2>
+    <form id="updateProductForm">
+        <input type="number" id="updateId" placeholder="Product ID" required>
+        <input type="text" id="updateName" placeholder="Name" required>
+        <input type="text" id="updateDescription" placeholder="Description" required>
+        <input type="number" id="updatePrice" placeholder="Price" required>
+        <input type="number" id="updateQuantity" placeholder="Quantity" required>
+        <button type="submit">Update Product</button>
+    </form>
+
+    <h2>Delete Product</h2>
+    <input type="number" id="deleteId" placeholder="Product ID">
+    <button onclick="deleteProduct()">Delete Product</button>
+
+
+<script>
+    const apiUrl = "http://127.0.0.1:8000";
+
+    async function fetchProducts() {
+        const resp = await fetch(`${apiUrl}/products`);
+        const products = await resp.json();
+        const tbody = document.querySelector("#productsTable tbody");
+        tbody.innerHTML = "";
+        products.forEach(p => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${p.id}</td>
+                <td>${p.name}</td>
+                <td>${p.description}</td>
+                <td>${p.price}</td>
+                <td>${p.quantity}</td>
+                <td><button onclick="prefillUpdateForm(${p.id})">Edit</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    document.getElementById("addProductForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const product = {
+            name: document.getElementById("addName").value,
+            description: document.getElementById("addDescription").value,
+            price: parseFloat(document.getElementById("addPrice").value),
+            quantity: parseInt(document.getElementById("addQuantity").value),
+        };
+        const resp = await fetch(`${apiUrl}/products`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(product),
+        });
+        if (resp.ok) {
+            alert("Product added");
+            fetchProducts();
+            e.target.reset();
+        } else {
+            const err = await resp.json();
+            alert("Add failed: " + JSON.stringify(err));
+        }
+    });
+
+    async function prefillUpdateForm(id) {
+        const resp = await fetch(`${apiUrl}/product/${id}`);
+        if (resp.ok) {
+            const p = await resp.json();
+            document.getElementById("updateId").value = p.id;
+            document.getElementById("updateName").value = p.name;
+            document.getElementById("updateDescription").value = p.description;
+            document.getElementById("updatePrice").value = p.price;
+            document.getElementById("updateQuantity").value = p.quantity;
+        } else {
+            alert("Cannot fetch product for update");
+        }
+    }
+
+    document.getElementById("updateProductForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const id = document.getElementById("updateId").value;
+        const product = {
+            name: document.getElementById("updateName").value,
+            description: document.getElementById("updateDescription").value,
+            price: parseFloat(document.getElementById("updatePrice").value),
+            quantity: parseInt(document.getElementById("updateQuantity").value),
+        };
+        const resp = await fetch(`${apiUrl}/products/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(product),
+        });
+        if (resp.ok) {
+            alert("Product updated");
+            fetchProducts();
+            e.target.reset();
+        } else {
+            const err = await resp.json();
+            alert("Update failed: " + JSON.stringify(err));
+        }
+    });
+
+    async function deleteProduct() {
+        const id = document.getElementById("deleteId").value;
+        const resp = await fetch(`${apiUrl}/products/${id}`, {
+            method: "DELETE",
+        });
+        if (resp.ok) {
+            alert("Deleted");
+            fetchProducts();
+            document.getElementById("deleteId").value = "";
+        } else {
+            const err = await resp.json();
+            alert("Delete failed: " + JSON.stringify(err));
+        }
+    }
+
+    fetchProducts();
+</script>
+
+
+
+</body>
+</html>

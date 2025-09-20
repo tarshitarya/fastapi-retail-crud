@@ -1,0 +1,152 @@
+/* Modern Dark Theme UI */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 30px;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    color: #ffffff;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #f0f0f0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+td {
+    color: #d0d0d0;
+}
+
+tr:hover {
+    background-color: #2c2c2c;
+}
+
+form {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+form input[type="text"],
+form input[type="number"] {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #43a047;
+}
+
+button {
+    padding: 6px 10px;
+    background-color: #2196f3;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1976d2;
+}
+
+input[type="number"]#deleteId {
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#deleteId + button {
+    background-color: #f44336;
+}
+
+#deleteId + button:hover {
+    background-color: #d32f2f;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+    form {
+        flex-direction: column;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: right;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        color: #aaa;
+        font-weight: bold;
+    }
+}
